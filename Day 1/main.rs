@@ -4,7 +4,7 @@ use std::io::{self, BufRead};
 use std::path::Path;
 
 fn main() -> io::Result<()> {
-    // Get the file path from the command-line
+    // Get the file path from the command-line arguments
     let args: Vec<String> = env::args().collect();
 
     if args.len() != 2 {
@@ -21,8 +21,9 @@ fn main() -> io::Result<()> {
         for line in io::BufReader::new(file).lines() {
             if let Ok(line) = line {
                 let numbers: Vec<i32> = line
-                    .split_whitespace()
-                    .filter_map(|s| s.parse().ok())
+                    .chars()
+                    .filter(|c| c.is_numeric())
+                    .flat_map(|c| c.to_string().parse())
                     .collect();
 
                 // If there are no numbers, continue to the next line
